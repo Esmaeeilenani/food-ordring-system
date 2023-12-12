@@ -36,6 +36,8 @@ public class OrderCreateCommandHandler {
 
     private final OrderDataMapper orderDataMapper;
 
+    private final ApplicationDomainEventPublisher applicationDomainEventPublisher;
+
 //    private final OrderCreatedPublisher orderCreatedPublisher;
 
     @Transactional
@@ -49,7 +51,7 @@ public class OrderCreateCommandHandler {
         log.info("order is created with id: {}", savedOrder.getId());
 
 //        orderCreatedPublisher.publish(orderCreatedEvent);
-
+        applicationDomainEventPublisher.publish(orderCreatedEvent);
         return orderDataMapper.orderToCreateOrderResponse(savedOrder);
     }
 
