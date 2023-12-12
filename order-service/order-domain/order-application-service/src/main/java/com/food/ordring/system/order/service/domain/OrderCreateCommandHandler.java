@@ -45,13 +45,12 @@ public class OrderCreateCommandHandler {
         Order order = orderDataMapper.createOrderCommandToOrder(createOrderCommand);
 
         OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitOrder(order, restaurant);
-
-        Order saveOrder = saveOrder(order);
-        log.info("order is created with id: {}", saveOrder.getId());
+        Order savedOrder = saveOrder(order);
+        log.info("order is created with id: {}", savedOrder.getId());
 
 //        orderCreatedPublisher.publish(orderCreatedEvent);
 
-        return orderDataMapper.orderToCreateOrderResponse(saveOrder);
+        return orderDataMapper.orderToCreateOrderResponse(savedOrder);
     }
 
 
