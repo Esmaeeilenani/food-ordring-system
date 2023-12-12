@@ -26,63 +26,21 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderCreateCommandHandler {
 
-    private final OrderDomainService orderDomainService;
-
-    private final OrderRepository orderRepository;
-
-    private final CustomerRepository customerRepository;
-
-    private final RestaurantRepository restaurantRepository;
 
     private final OrderDataMapper orderDataMapper;
 
-//    private final OrderCreatedPublisher orderCreatedPublisher;
+    private final CreateOrderHelper createOrderHelper;
 
-    @Transactional
+    private final OrderCreatedPublisher orderCreatedPublisher;
+
     public CreateOrderResponse createOrder(CreateOrderCommand createOrderCommand) {
-        checkCustomer(createOrderCommand.getCustomerId());
-        Restaurant restaurant = checkRestaurant(createOrderCommand);
-        Order order = orderDataMapper.createOrderCommandToOrder(createOrderCommand);
-
-        OrderCreatedEvent orderCreatedEvent = orderDomainService.validateAndInitOrder(order, restaurant);
-        Order savedOrder = saveOrder(order);
-        log.info("order is created with id: {}", savedOrder.getId());
-
-//        orderCreatedPublisher.publish(orderCreatedEvent);
-
-        return orderDataMapper.orderToCreateOrderResponse(savedOrder);
+        //using new class and not a method inside the current class so that @Transactional can function correctly
+        //we need the order to be saved 100% and close the transaction sow we can fire the event with 100% sure that the order is persisted
+        OrderCreatedEvent orderCreatedEvent = createOrderHelper.persistOrder(createOrderCommand);
+        log.info("order is created with id: {}", orderCreatedEvent.getOrder().getId());
+        orderCreatedPublisher.publish(orderCreatedEvent);
+        return orderDataMapper.orderToCreateOrderResponse(orderCreatedEvent.getOrder());
     }
 
 
-    private Restaurant checkRestaurant(CreateOrderCommand createOrderCommand) {
-        Restaurant restaurant = orderDataMapper.createOrderCommandToRestaurant(createOrderCommand);
-        Optional<Restaurant> restaurantInfo = restaurantRepository.findRestaurantInfo(restaurant);
-
-        if (restaurantInfo.isEmpty()) {
-            log.warn("couldn't find restaurant with id: {} ", createOrderCommand.getRestaurantId());
-            throw new DomainException("couldn't find restaurant with id: " + createOrderCommand.getRestaurantId());
-        }
-
-        return restaurantInfo.get();
-    }
-
-    private void checkCustomer(UUID customerId) {
-        Optional<Customer> customerOpt = customerRepository.findCustomerById(customerId);
-        if (customerOpt.isEmpty()) {
-            log.warn("Couldn't find customer with id : {}", customerId.toString());
-            throw new OrderDomainException("Couldn't find customer with id : " + customerId.toString());
-        }
-
-
-    }
-
-    private Order saveOrder(Order order) {
-        Order savedOrder = orderRepository.save(order);
-        if (savedOrder == null) {
-            throw new OrderDomainException("Could not save order");
-        }
-
-        log.info("order is saved with id : {}", savedOrder.getId());
-        return savedOrder;
-    }
 }

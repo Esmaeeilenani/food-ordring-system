@@ -1,5 +1,6 @@
 package com.food.ordring.system.order.service.domain;
 
+import com.food.ordring.system.domain.helper.DateAndTimeUtil;
 import com.food.ordring.system.order.service.domain.entity.Order;
 import com.food.ordring.system.order.service.domain.entity.Product;
 import com.food.ordring.system.order.service.domain.entity.Restaurant;
@@ -9,14 +10,12 @@ import com.food.ordring.system.order.service.domain.event.OrderPaidEvent;
 import com.food.ordring.system.order.service.domain.exception.OrderDomainException;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Slf4j
 public class OrderDomainServiceImpl implements OrderDomainService {
 
-    private final String UTC = "UTC";
+
 
     @Override
     public OrderCreatedEvent validateAndInitOrder(Order order, Restaurant restaurant) {
@@ -25,7 +24,7 @@ public class OrderDomainServiceImpl implements OrderDomainService {
         order.validateOrder();
         order.initOrder();
         log.info("order with id: {} is initiated", order.getId());
-        return new OrderCreatedEvent(order, now());
+        return new OrderCreatedEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow());
     }
 
 
@@ -33,7 +32,7 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     public OrderPaidEvent payOrder(Order order) {
         order.pay();
         log.info("order with id: {} is paid", order.getId());
-        return new OrderPaidEvent(order, now());
+        return new OrderPaidEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow());
     }
 
     @Override
@@ -46,7 +45,7 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages) {
         order.initCancel(failureMessages);
         log.info("cancelling Order with id : {}", order.getId());
-        return new OrderCancelledEvent(order, now());
+        return new OrderCancelledEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow());
     }
 
     @Override
@@ -72,7 +71,5 @@ public class OrderDomainServiceImpl implements OrderDomainService {
         }
     }
 
-    private ZonedDateTime now() {
-        return ZonedDateTime.now(ZoneId.of(UTC));
-    }
+
 }
