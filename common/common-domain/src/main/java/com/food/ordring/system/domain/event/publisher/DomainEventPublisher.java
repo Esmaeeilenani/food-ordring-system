@@ -4,7 +4,7 @@ import com.food.ordring.system.domain.event.DomainEvent;
 
 
 public interface DomainEventPublisher<T extends DomainEvent> {
-    void publish(T domianEvent);
+    void publish(T domainEvent);
 
 
 }
