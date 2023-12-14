@@ -1,0 +1,16 @@
+package com.food.ordring.system.order.service.dataaccess.customer.mapper;
+
+import com.food.ordring.system.domain.valueobject.CustomerId;
+import com.food.ordring.system.order.service.dataaccess.customer.entity.CustomerEntity;
+import com.food.ordring.system.order.service.domain.entity.Customer;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CustomerDataAccessMapper {
+
+    public Customer toCustomerDomain(CustomerEntity customerEntity){
+        return new Customer(new CustomerId(customerEntity.getId()));
+    }
+
+
+}

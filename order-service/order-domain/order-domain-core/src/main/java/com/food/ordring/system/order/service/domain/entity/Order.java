@@ -26,6 +26,8 @@ public class Order extends AggregateRoot<OrderId> {
 
     private List<String> failureMessages;
 
+    public static final String FAILURE_MESSAGES_DELIMITER = ",";
+
     Order(OrderId orderId, CustomerId customerId, RestaurantId restaurantId, StreetAddress deliveryAddress, Money price, List<OrderItem> orderItems, TrackingId trackingId, OrderStatus orderStatus, List<String> failureMessages) {
         super.setId(orderId);
         this.customerId = customerId;

@@ -5,6 +5,7 @@ import lombok.Getter;
 import java.util.Objects;
 import java.util.UUID;
 @Getter
+
 public class StreetAddress {
     private final UUID Id;
     private final String street;
