@@ -1,11 +1,12 @@
 package com.food.ordring.system.order.service.domain.dto.track;
 
 import com.food.ordring.system.domain.valueobject.OrderStatus;
-import jakarta.validation.constraints.NotNull;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 

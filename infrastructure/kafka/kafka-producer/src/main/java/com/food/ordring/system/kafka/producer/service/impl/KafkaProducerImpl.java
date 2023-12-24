@@ -2,7 +2,7 @@ package com.food.ordring.system.kafka.producer.service.impl;
 
 import com.food.ordring.system.kafka.producer.exception.KafkaProducerException;
 import com.food.ordring.system.kafka.producer.service.KafkaProducer;
-import jakarta.annotation.PreDestroy;
+import javax.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.avro.specific.SpecificRecordBase;
@@ -13,7 +13,7 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.Serializable;
-import java.util.concurrent.CompletableFuture;
+
 
 @Component
 @Slf4j

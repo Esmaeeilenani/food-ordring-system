@@ -79,13 +79,13 @@ public class OrderApplicationServiceTest {
                 .items(List.of(
                         OrderItem.builder()
                                 .productId(PRODUCT_ID)
-                                .qauntity(1)
+                                .quantity(1)
                                 .price(new BigDecimal("50.00"))
                                 .subTotal(new BigDecimal("50.00"))
                                 .build(),
                         OrderItem.builder()
                                 .productId(PRODUCT_ID)
-                                .qauntity(3)
+                                .quantity(3)
                                 .price(new BigDecimal("50.00"))
                                 .subTotal(new BigDecimal("150.00"))
                                 .build()
@@ -103,13 +103,13 @@ public class OrderApplicationServiceTest {
                 .items(List.of(
                         OrderItem.builder()
                                 .productId(PRODUCT_ID)
-                                .qauntity(1)
+                                .quantity(1)
                                 .price(new BigDecimal("50.00"))
                                 .subTotal(new BigDecimal("50.00"))
                                 .build(),
                         OrderItem.builder()
                                 .productId(PRODUCT_ID)
-                                .qauntity(3)
+                                .quantity(3)
                                 .price(new BigDecimal("50.00"))
                                 .subTotal(new BigDecimal("150.00"))
                                 .build()
@@ -128,13 +128,13 @@ public class OrderApplicationServiceTest {
                 .items(List.of(
                         OrderItem.builder()
                                 .productId(PRODUCT_ID)
-                                .qauntity(1)
+                                .quantity(1)
                                 .price(new BigDecimal("60.00"))
                                 .subTotal(new BigDecimal("60.00"))
                                 .build(),
                         OrderItem.builder()
                                 .productId(PRODUCT_ID)
-                                .qauntity(3)
+                                .quantity(3)
                                 .price(new BigDecimal("50.00"))
                                 .subTotal(new BigDecimal("150.00"))
                                 .build()

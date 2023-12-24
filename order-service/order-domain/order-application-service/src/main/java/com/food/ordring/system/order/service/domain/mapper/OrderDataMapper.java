@@ -51,7 +51,7 @@ public class OrderDataMapper {
                 .map(orderItem -> OrderItem.builder()
                         .product(new Product(orderItem.getProductId()))
                         .price(new Money(orderItem.getPrice()))
-                        .quantity(orderItem.getQauntity())
+                        .quantity(orderItem.getQuantity())
                         .subTotal(new Money(orderItem.getSubTotal()))
                         .build())
                 .toList();

@@ -5,7 +5,7 @@ import com.food.ordring.system.order.service.domain.dto.create.CreateOrderRespon
 import com.food.ordring.system.order.service.domain.dto.track.TrackOrderQuery;
 import com.food.ordring.system.order.service.domain.dto.track.TrackOrderResponse;
 import com.food.ordring.system.order.service.domain.ports.input.service.OrderApplicationService;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

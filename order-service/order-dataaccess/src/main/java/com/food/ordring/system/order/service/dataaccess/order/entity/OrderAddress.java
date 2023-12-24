@@ -1,6 +1,6 @@
 package com.food.ordring.system.order.service.dataaccess.order.entity;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 import java.util.Objects;
