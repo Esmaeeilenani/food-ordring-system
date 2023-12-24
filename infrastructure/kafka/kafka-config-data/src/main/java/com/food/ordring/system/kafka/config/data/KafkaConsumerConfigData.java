@@ -23,6 +23,8 @@ public class KafkaConsumerConfigData {
     private Integer maxPollRecords;
     private Integer maxPartitionsFetchBytesDefault;
     private Integer maxPartitionsFetchBytesBoostFactor;
+    private String paymentConsumerGroupId;
+    private String restaurantApprovalConsumerGroupId;
 
 
 

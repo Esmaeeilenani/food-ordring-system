@@ -9,6 +9,7 @@ import com.food.ordring.system.order.service.domain.ports.output.message.publish
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
@@ -23,6 +24,7 @@ public class OrderCreateCommandHandler {
 
     private final OrderCreatedPublisher orderCreatedPublisher;
 
+    @Transactional
     public CreateOrderResponse createOrder(CreateOrderCommand createOrderCommand) {
         //using new class and not a method inside the current class so that @Transactional can function correctly
         //we need the order to be saved 100% and close the transaction sow we can fire the event with 100% sure that the order is persisted
