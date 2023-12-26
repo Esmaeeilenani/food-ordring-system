@@ -15,5 +15,9 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.food.ordring.system</groupId>
+            <artifactId>payment-domain-core</artifactId>
+        </dependency>
     </dependencies>
 </project>
