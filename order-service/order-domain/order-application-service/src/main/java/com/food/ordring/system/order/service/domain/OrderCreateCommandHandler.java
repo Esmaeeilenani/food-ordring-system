@@ -22,7 +22,6 @@ public class OrderCreateCommandHandler {
 
     private final CreateOrderHelper createOrderHelper;
 
-    private final OrderCreatedPublisher orderCreatedPublisher;
 
     @Transactional
     public CreateOrderResponse createOrder(CreateOrderCommand createOrderCommand) {
@@ -30,7 +29,7 @@ public class OrderCreateCommandHandler {
         //we need the order to be saved 100% and close the transaction sow we can fire the event with 100% sure that the order is persisted
         OrderCreatedEvent orderCreatedEvent = createOrderHelper.persistOrder(createOrderCommand);
         log.info("order is created with id: {}", orderCreatedEvent.getOrder().getId());
-        orderCreatedPublisher.publish(orderCreatedEvent);
+        orderCreatedEvent.fire();
         return orderDataMapper.orderToCreateOrderResponse(orderCreatedEvent.getOrder(), "Order Created Successfully");
     }
 

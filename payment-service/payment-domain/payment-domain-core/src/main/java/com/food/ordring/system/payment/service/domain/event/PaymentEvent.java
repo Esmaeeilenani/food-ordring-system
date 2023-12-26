@@ -16,4 +16,6 @@ public abstract class PaymentEvent implements DomainEvent<Payment> {
         this.createdAt = createdAt;
         this.failureMessages = failureMessages;
     }
+
+
 }

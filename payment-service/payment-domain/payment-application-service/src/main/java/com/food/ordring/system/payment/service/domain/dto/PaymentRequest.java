@@ -16,6 +16,7 @@ public class PaymentRequest {
 
     private String id;
     private String sagaId;
+    private String orderId;
     private String customerId;
     private BigDecimal price;
     private Instant createdAt;
@@ -25,7 +26,6 @@ public class PaymentRequest {
     public void setPaymentOrderStatus(PaymentOrderStatus paymentOrderStatus) {
         this.paymentOrderStatus = paymentOrderStatus;
     }
-
 
 
 }

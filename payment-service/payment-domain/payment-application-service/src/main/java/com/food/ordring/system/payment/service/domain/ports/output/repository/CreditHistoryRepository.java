@@ -9,5 +9,6 @@ public interface CreditHistoryRepository {
 
     CreditHistory save(CreditHistory creditHistory);
 
+
     List<CreditHistory> findAllByCustomerId(UUID customerId);
 }

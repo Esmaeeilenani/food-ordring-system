@@ -1,5 +1,6 @@
 package com.food.ordring.system.order.service.domain;
 
+import com.food.ordring.system.domain.event.publisher.DomainEventPublisher;
 import com.food.ordring.system.domain.helper.DateAndTimeUtil;
 import com.food.ordring.system.order.service.domain.entity.Order;
 import com.food.ordring.system.order.service.domain.entity.Product;
@@ -18,21 +19,21 @@ public class OrderDomainServiceImpl implements OrderDomainService {
 
 
     @Override
-    public OrderCreatedEvent validateAndInitOrder(Order order, Restaurant restaurant) {
+    public OrderCreatedEvent validateAndInitOrder(Order order, Restaurant restaurant , DomainEventPublisher<OrderCreatedEvent> orderCreatedEventPublisher) {
         validateRestaurant(restaurant);
         setOrderProductInformation(order, restaurant);
         order.validateOrder();
         order.initOrder();
         log.info("order with id: {} is initiated", order.getId());
-        return new OrderCreatedEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow());
+        return new OrderCreatedEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow(), orderCreatedEventPublisher);
     }
 
 
     @Override
-    public OrderPaidEvent payOrder(Order order) {
+    public OrderPaidEvent payOrder(Order order, DomainEventPublisher<OrderPaidEvent> orderPaidEventPublisher) {
         order.pay();
         log.info("order with id: {} is paid", order.getId());
-        return new OrderPaidEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow());
+        return new OrderPaidEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow(), orderPaidEventPublisher);
     }
 
     @Override
@@ -42,10 +43,10 @@ public class OrderDomainServiceImpl implements OrderDomainService {
     }
 
     @Override
-    public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages) {
+    public OrderCancelledEvent cancelOrderPayment(Order order, List<String> failureMessages , DomainEventPublisher<OrderCancelledEvent> orderCancelledEventPublisher) {
         order.initCancel(failureMessages);
         log.info("cancelling Order with id : {}", order.getId());
-        return new OrderCancelledEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow());
+        return new OrderCancelledEvent(order, DateAndTimeUtil.zonedDateTimeUTCNow(), orderCancelledEventPublisher);
     }
 
     @Override
