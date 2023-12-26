@@ -33,7 +33,7 @@ public class Payment extends AggregateRoot<PaymentId> {
         super.setId(id);
         this.orderId = orderId;
         this.customerId = customerId;
-        this.price = price;
+        this.price = price == null ? Money.ZERO : price;
         this.paymentStatus = paymentStatus;
         this.createdAt = createdAt;
     }
@@ -44,16 +44,16 @@ public class Payment extends AggregateRoot<PaymentId> {
 
     }
 
-    public void validatePayment(List<String> failureMessages){
-        failureMessages = failureMessages == null? new ArrayList<>():failureMessages;
+    public void validatePayment(List<String> failureMessages) {
+        failureMessages = failureMessages == null ? new ArrayList<>() : failureMessages;
 
-        if (this.price == null || !this.price.isGreaterThanZero()){
+        if (!this.price.isGreaterThanZero()) {
             failureMessages.add("Total price must be greater than zero");
         }
 
     }
 
-    public void updateStatus(PaymentStatus paymentStatus){
+    public void updateStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 
