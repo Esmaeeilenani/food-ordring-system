@@ -2,10 +2,11 @@ package com.food.ordring.system.payment.service.domain.event;
 
 import com.food.ordring.system.domain.event.publisher.DomainEventPublisher;
 import com.food.ordring.system.payment.service.domain.entity.Payment;
+import lombok.Getter;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-
+@Getter
 public class PaymentFailedEvent extends PaymentEvent {
 
     private final DomainEventPublisher<PaymentFailedEvent> publisher;

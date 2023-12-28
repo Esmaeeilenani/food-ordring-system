@@ -1,6 +1,5 @@
-package com.food.ordring.system.order.service.messaging.publisher.kafka;
+package com.food.ordring.system.kafka.producer;
 
-import com.food.ordring.system.kafka.order.avro.model.PaymentRequestAvroModel;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.springframework.kafka.support.SendResult;
@@ -9,15 +8,15 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Component
 @Slf4j
-public class OrderKafkaPublisherHelper {
+public class KafkaMessageCallbackHelper {
 
 
-    public <T> ListenableFutureCallback<SendResult<String, T>> getKafkaCallback(String responseTopicName, T requestAvroModel,String orderId) {
+    public <T> ListenableFutureCallback<SendResult<String, T>> getKafkaCallback(String topicName, T avroModel,String orderId) {
         return new ListenableFutureCallback<SendResult<String, T>>() {
             @Override
             public void onFailure(Throwable ex) {
-                log.error("Error while sending  "+requestAvroModel.getClass().getName()+
-                        " message {}, topic {}", requestAvroModel, responseTopicName);
+                log.error("Error while sending  "+avroModel.getClass().getName()+
+                        " message {}, topic {}", avroModel, topicName);
             }
 
             @Override

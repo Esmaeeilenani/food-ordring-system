@@ -1,6 +1,7 @@
 package com.food.ordring.system.order.service.messaging.publisher.kafka;
 
 import com.food.ordring.system.kafka.order.avro.model.PaymentRequestAvroModel;
+import com.food.ordring.system.kafka.producer.KafkaMessageCallbackHelper;
 import com.food.ordring.system.kafka.producer.service.KafkaProducer;
 import com.food.ordring.system.order.service.domain.config.OrderServiceConfig;
 import com.food.ordring.system.order.service.domain.event.OrderCreatedEvent;
@@ -18,7 +19,7 @@ public class CreateOrderKafkaPublisher implements OrderCreatedPublisher {
     private final OrderServiceConfig orderServiceConfig;
     private final KafkaProducer<String, PaymentRequestAvroModel> kafkaProducer;
 
-    private final OrderKafkaPublisherHelper orderKafkaPublisherHelper;
+    private final KafkaMessageCallbackHelper kafkaMessageCallbackHelper;
 
 
     @Override
@@ -32,7 +33,7 @@ public class CreateOrderKafkaPublisher implements OrderCreatedPublisher {
             kafkaProducer.send(orderServiceConfig.getPaymentRequestTopicName(),
                     orderId,
                     paymentRequestAvroModel,
-                    orderKafkaPublisherHelper
+                    kafkaMessageCallbackHelper
                             .getKafkaCallback(orderServiceConfig.getPaymentResponseTopicName(),
                                     paymentRequestAvroModel,
                                     orderId

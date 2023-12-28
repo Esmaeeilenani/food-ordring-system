@@ -1,7 +1,7 @@
 package com.food.ordring.system.order.service.messaging.publisher.kafka;
 
-import com.food.ordring.system.kafka.order.avro.model.PaymentRequestAvroModel;
 import com.food.ordring.system.kafka.order.avro.model.RestaurantApprovalRequestAvroModel;
+import com.food.ordring.system.kafka.producer.KafkaMessageCallbackHelper;
 import com.food.ordring.system.kafka.producer.service.KafkaProducer;
 import com.food.ordring.system.order.service.domain.config.OrderServiceConfig;
 import com.food.ordring.system.order.service.domain.event.OrderPaidEvent;
@@ -18,7 +18,7 @@ public class PayOrderKafkaPublisher implements OrderPaidPublisher {
     private final OrderMessagingDataMapper orderMessagingDataMapper;
     private final OrderServiceConfig orderServiceConfig;
     private final KafkaProducer<String, RestaurantApprovalRequestAvroModel> kafkaProducer;
-    private final OrderKafkaPublisherHelper orderKafkaPublisherHelper;
+    private final KafkaMessageCallbackHelper kafkaMessageCallbackHelper;
 
     @Override
     public void publish(OrderPaidEvent domainEvent) {
@@ -29,7 +29,7 @@ public class PayOrderKafkaPublisher implements OrderPaidPublisher {
             kafkaProducer.send(orderServiceConfig.getRestaurantApprovalRequestTopicName(),
                     orderId,
                     restaurantApprovalRequestAvroModel,
-                    orderKafkaPublisherHelper
+                    kafkaMessageCallbackHelper
                             .getKafkaCallback(orderServiceConfig.getRestaurantApprovalResponseTopicName(),
                                     restaurantApprovalRequestAvroModel,
                                     orderId
