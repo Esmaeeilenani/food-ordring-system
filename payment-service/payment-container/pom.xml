@@ -19,5 +19,37 @@
             <groupId>com.food.ordring.system</groupId>
             <artifactId>payment-domain-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.food.ordring.system</groupId>
+            <artifactId>payment-application-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.food.ordring.system</groupId>
+            <artifactId>payment-dataaccess</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.food.ordring.system</groupId>
+            <artifactId>payment-messaging</artifactId>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>${project.groupId}/payment.service:${project.version}</name>
+                        <env>
+                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+                        </env>
+                    </image>
+                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
