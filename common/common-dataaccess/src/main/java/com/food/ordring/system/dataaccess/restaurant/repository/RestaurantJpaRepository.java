@@ -1,7 +1,8 @@
-package com.food.ordring.system.order.service.dataaccess.restaurant.repository;
+package com.food.ordring.system.dataaccess.restaurant.repository;
 
-import com.food.ordring.system.order.service.dataaccess.restaurant.entity.RestaurantEntity;
-import com.food.ordring.system.order.service.dataaccess.restaurant.entity.RestaurantEntityId;
+
+import com.food.ordring.system.dataaccess.restaurant.entity.RestaurantEntity;
+import com.food.ordring.system.dataaccess.restaurant.entity.RestaurantEntityId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
