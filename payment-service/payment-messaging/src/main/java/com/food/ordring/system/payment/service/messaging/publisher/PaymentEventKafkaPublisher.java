@@ -10,6 +10,7 @@ import com.food.ordring.system.payment.service.domain.event.PaymentEvent;
 import com.food.ordring.system.payment.service.domain.event.PaymentFailedEvent;
 import com.food.ordring.system.payment.service.domain.exception.PaymentDomainException;
 import com.food.ordring.system.payment.service.messaging.mapper.PaymentMessagingDataMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +20,9 @@ import java.util.function.Function;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class PaymentEventKafkaPublisher<T extends PaymentEvent> {
 
-    private final PaymentMessagingDataMapper paymentMessagingDataMapper;
 
     private final KafkaProducer<String, PaymentResponseAvroModel> kafkaProducer;
 
@@ -30,26 +31,16 @@ public class PaymentEventKafkaPublisher<T extends PaymentEvent> {
     private final KafkaMessageCallbackHelper kafkaMessageCallbackHelper;
 
 
-//    private final Map<Class<? extends PaymentEvent>, Function<PaymentEvent, PaymentResponseAvroModel>> eventMapperMap = new HashMap<>();
-
-    public PaymentEventKafkaPublisher(PaymentMessagingDataMapper paymentMessagingDataMapper, KafkaProducer<String, PaymentResponseAvroModel> kafkaProducer, PaymentServiceConfigData paymentServiceConfigData, KafkaMessageCallbackHelper kafkaMessageCallbackHelper) {
-        this.paymentMessagingDataMapper = paymentMessagingDataMapper;
-        this.kafkaProducer = kafkaProducer;
-        this.paymentServiceConfigData = paymentServiceConfigData;
-        this.kafkaMessageCallbackHelper = kafkaMessageCallbackHelper;
-//        eventMapperMap.put(PaymentCompletedEvent.class, (event) -> paymentMessagingDataMapper.paymentCompletedEventToPaymentResponseAvroModel((PaymentCompletedEvent) event));
-//        eventMapperMap.put(PaymentCancelledEvent.class, (event) -> paymentMessagingDataMapper.paymentCancelledEventToPaymentResponseAvroModel((PaymentCancelledEvent) event));
-//        eventMapperMap.put(PaymentFailedEvent.class, (event) -> paymentMessagingDataMapper.paymentFailedEventToPaymentResponseAvroModel((PaymentFailedEvent) event));
-    }
 
 
-    public void publish(T paymentEvent) {
+
+    public void publish(T paymentEvent, Function<T,PaymentResponseAvroModel> mapper) {
 
 
         String orderId = paymentEvent.getPayment().getOrderId().toString();
         log.info("Received {} for order id: {} ", paymentEvent.getClass().getName(), orderId);
 
-        PaymentResponseAvroModel paymentResponseAvroModel = mapToPaymentResponseAvroModel(paymentEvent);
+        PaymentResponseAvroModel paymentResponseAvroModel = mapper.apply(paymentEvent);
 
 
         String responseTopicName = paymentServiceConfigData.getPaymentResponseTopicName();
@@ -78,16 +69,6 @@ public class PaymentEventKafkaPublisher<T extends PaymentEvent> {
     }
 
 
-    private PaymentResponseAvroModel mapToPaymentResponseAvroModel(T paymentEvent) {
-        return switch (paymentEvent) {
-            case PaymentCompletedEvent event ->
-                    paymentMessagingDataMapper.paymentCompletedEventToPaymentResponseAvroModel(event);
-            case PaymentCancelledEvent event ->
-                    paymentMessagingDataMapper.paymentCancelledEventToPaymentResponseAvroModel(event);
-            case PaymentFailedEvent event ->
-                    paymentMessagingDataMapper.paymentFailedEventToPaymentResponseAvroModel(event);
-            default -> throw new PaymentDomainException("event not supported");
-        };
-    }
+
 
 }
