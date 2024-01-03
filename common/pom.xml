@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.food.ordring.system</groupId>
-        <artifactId>food-ordring-system</artifactId>
+        <artifactId>food-ordering-system</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 

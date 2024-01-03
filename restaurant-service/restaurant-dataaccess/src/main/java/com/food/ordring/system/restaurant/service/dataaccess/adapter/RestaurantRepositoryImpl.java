@@ -1,8 +1,8 @@
 package com.food.ordring.system.restaurant.service.dataaccess.adapter;
 
 
-import com.food.ordring.system.dataaccess.restaurant.entity.RestaurantEntity;
-import com.food.ordring.system.dataaccess.restaurant.repository.RestaurantJpaRepository;
+import com.food.ordering.system.dataaccess.restaurant.entity.RestaurantEntity;
+import com.food.ordering.system.dataaccess.restaurant.repository.RestaurantJpaRepository;
 import com.food.ordring.system.restaurant.service.dataaccess.mapper.RestaurantDataAccessMapper;
 import com.food.ordring.system.restaurant.service.domain.entity.Restaurant;
 
