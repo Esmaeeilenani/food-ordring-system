@@ -6,6 +6,9 @@ import com.food.ordring.system.payment.service.dataaccess.credithistory.entity.C
 import com.food.ordring.system.payment.service.domain.entity.CreditHistory;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CreditHistoryDataAccessMapper {
 
@@ -17,6 +20,13 @@ public class CreditHistoryDataAccessMapper {
                 .transactionType(creditHistoryEntity.getType())
                 .build();
     }
+
+    public List<CreditHistory> creditHistoriesEntityToCreditHistories(List<CreditHistoryEntity> entities) {
+        List<CreditHistory> creditHistories = new ArrayList<>();
+        entities.forEach(creditHistoryEntity -> creditHistories.add(creditHistoryEntityToCreditHistory(creditHistoryEntity)));
+        return creditHistories;
+    }
+
 
     public CreditHistoryEntity creditHistoryToCreditHistoryEntity(CreditHistory creditHistory) {
         return CreditHistoryEntity.builder()

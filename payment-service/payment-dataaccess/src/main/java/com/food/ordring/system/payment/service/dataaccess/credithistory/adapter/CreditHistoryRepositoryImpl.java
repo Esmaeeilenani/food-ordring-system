@@ -34,9 +34,6 @@ public class CreditHistoryRepositoryImpl implements CreditHistoryRepository {
     @Override
     public List<CreditHistory> findAllByCustomerId(UUID customerId) {
         List<CreditHistoryEntity> historyEntities = creditHistoryJpaRepository.findAllByCustomerId(customerId);
-        return historyEntities
-                .stream()
-                .map(creditHistoryDataAccessMapper::creditHistoryEntityToCreditHistory)
-                .toList();
+        return creditHistoryDataAccessMapper.creditHistoriesEntityToCreditHistories(historyEntities);
     }
 }
