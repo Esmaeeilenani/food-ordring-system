@@ -1,10 +1,10 @@
 package com.food.ordring.system.order.service.domain.ports.output.repository;
 
+import com.food.ordring.system.domain.valueobject.OrderId;
 import com.food.ordring.system.order.service.domain.entity.Order;
 import com.food.ordring.system.order.service.domain.valueobject.TrackingId;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public interface OrderRepository {
     Order save(Order order);
@@ -12,4 +12,5 @@ public interface OrderRepository {
     Optional<Order> findByTrackingId(TrackingId trackingId);
 
 
+    Optional<Order> findById(OrderId orderId);
 }
