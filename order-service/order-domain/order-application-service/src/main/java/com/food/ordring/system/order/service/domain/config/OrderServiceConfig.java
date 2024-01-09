@@ -3,7 +3,6 @@ package com.food.ordring.system.order.service.domain.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 @Data
 @Configuration
@@ -13,5 +12,7 @@ public class OrderServiceConfig {
     private String paymentResponseTopicName;
     private String restaurantApprovalRequestTopicName;
     private String restaurantApprovalResponseTopicName;
+    private long outboxSchedulerFixedRate;
+    private long outboxSchedulerInitialDelay;
 
 }
