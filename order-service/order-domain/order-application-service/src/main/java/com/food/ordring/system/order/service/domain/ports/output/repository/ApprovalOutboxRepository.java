@@ -4,6 +4,7 @@ import com.food.ordring.system.order.service.domain.outbox.model.approval.OrderA
 import com.food.ordring.system.outbox.OutboxStatus;
 import com.food.ordring.system.saga.SagaStatus;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ public interface ApprovalOutboxRepository {
 
     OrderApprovalOutboxMessage save(OrderApprovalOutboxMessage orderApprovalOutboxMessage);
 
-    Optional<OrderApprovalOutboxMessage> findByTypeAndOutboxStatusAndSagaStatuses(
+    List<OrderApprovalOutboxMessage> findByTypeAndOutboxStatusAndSagaStatuses(
             String type,
             OutboxStatus outboxStatus,
             SagaStatus... sagaStatuses

@@ -19,11 +19,12 @@ import static com.food.ordring.system.saga.order.SagaConstants.ORDER_SAGA_NAME;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@Transactional(readOnly = true)
+@Transactional
 class SchedulerHelper {
     private final PaymentOutboxRepository paymentOutboxRepository;
 
 
+    @Transactional(readOnly = true)
     public List<OrderPaymentOutboxMessage> getPaymentOutboxMessagesByOutboxStatusAndSagaStatuses(
             OutboxStatus outboxStatus, SagaStatus... sagaStatuses) {
 
@@ -34,14 +35,14 @@ class SchedulerHelper {
 
     }
 
-
+    @Transactional(readOnly = true)
     public Optional<OrderPaymentOutboxMessage> getPaymentOutboxMessageBySagaIdAndSagaStatuses(UUID sagaId,
                                                                                               SagaStatus... sagaStatuses) {
         return paymentOutboxRepository
                 .findByTypeAndSagaIdAndSagaStatuses(ORDER_SAGA_NAME, sagaId, sagaStatuses);
     }
 
-    @Transactional(readOnly = false)
+
     public void save(OrderPaymentOutboxMessage orderPaymentOutboxMessage) {
         OrderPaymentOutboxMessage response = paymentOutboxRepository.save(orderPaymentOutboxMessage);
 
