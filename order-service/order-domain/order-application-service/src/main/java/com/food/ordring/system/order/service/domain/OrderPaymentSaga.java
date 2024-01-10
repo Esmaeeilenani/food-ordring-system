@@ -6,7 +6,6 @@ import com.food.ordring.system.order.service.domain.dto.message.PaymentResponse;
 import com.food.ordring.system.order.service.domain.entity.Order;
 import com.food.ordring.system.order.service.domain.event.OrderPaidEvent;
 import com.food.ordring.system.order.service.domain.exception.OrderNotFoundException;
-import com.food.ordring.system.order.service.domain.ports.output.message.publisher.restaurant.OrderPaidPublisher;
 import com.food.ordring.system.order.service.domain.ports.output.repository.OrderRepository;
 import com.food.ordring.system.saga.SagaStep;
 import lombok.RequiredArgsConstructor;

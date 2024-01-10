@@ -4,13 +4,14 @@ import com.food.ordring.system.order.service.domain.outbox.model.payment.OrderPa
 import com.food.ordring.system.outbox.OutboxStatus;
 import com.food.ordring.system.saga.SagaStatus;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface PaymentOutboxRepository {
     OrderPaymentOutboxMessage save(OrderPaymentOutboxMessage orderPaymentOutboxMessage);
 
-    Optional<OrderPaymentOutboxMessage> findByTypeAndOutboxStatusAndSagaStatuses(
+    List<OrderPaymentOutboxMessage> findByTypeAndOutboxStatusAndSagaStatuses(
             String type,
             OutboxStatus outboxStatus,
             SagaStatus... sagaStatuses
