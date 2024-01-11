@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class RestaurantApprovalOutboxScheduler implements OutboxScheduler {
 
-    private final SchedulerHelper schedulerHelper;
+    private final ApprovalOutboxHelper approvalOutboxHelper;
 
     private final RestaurantApprovalPub restaurantApprovalPub;
 
@@ -29,7 +29,7 @@ public class RestaurantApprovalOutboxScheduler implements OutboxScheduler {
     @Scheduled(fixedDelayString = "${order-service.outbox-scheduler-fixed-rate}",
             initialDelayString = "${order-service.outbox-scheduler-initial-delay}")
     public void processesOutboxMessage() {
-        List<OrderApprovalOutboxMessage> approvalOutboxMessages = schedulerHelper.getApprovalOutboxMessagesByOutboxStatusAndSagaStatuses(
+        List<OrderApprovalOutboxMessage> approvalOutboxMessages = approvalOutboxHelper.getApprovalOutboxMessagesByOutboxStatusAndSagaStatuses(
                 OutboxStatus.STARTED,
                 SagaStatus.PROCESSING
         );
@@ -53,7 +53,7 @@ public class RestaurantApprovalOutboxScheduler implements OutboxScheduler {
 
     private void updateOutboxStatus(OrderApprovalOutboxMessage orderApprovalOutboxMessage, OutboxStatus outboxStatus) {
         orderApprovalOutboxMessage.setOutboxStatus(outboxStatus);
-        schedulerHelper.save(orderApprovalOutboxMessage);
+        approvalOutboxHelper.save(orderApprovalOutboxMessage);
         log.info("orderApprovalOutboxMessage is updated to new outbox status: {}", outboxStatus);
 
     }

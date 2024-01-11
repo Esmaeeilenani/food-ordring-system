@@ -1,7 +1,6 @@
 package com.food.ordring.system.order.service.domain.outbox.scheduler.approval;
 
 import com.food.ordring.system.order.service.domain.outbox.model.approval.OrderApprovalOutboxMessage;
-import com.food.ordring.system.order.service.domain.outbox.model.payment.OrderPaymentOutboxMessage;
 import com.food.ordring.system.order.service.domain.ports.output.message.publisher.restaurant.RestaurantApprovalPub;
 import com.food.ordring.system.outbox.OutboxScheduler;
 import com.food.ordring.system.outbox.OutboxStatus;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class RestaurantApprovalOutboxCleanerSched implements OutboxScheduler {
 
-    private final SchedulerHelper schedulerHelper;
+    private final ApprovalOutboxHelper approvalOutboxHelper;
 
     private final RestaurantApprovalPub restaurantApprovalPub;
 
@@ -34,7 +33,7 @@ public class RestaurantApprovalOutboxCleanerSched implements OutboxScheduler {
                 SagaStatus.COMPENSATED,
                 SagaStatus.FAILED
         };
-        List<OrderApprovalOutboxMessage> approvalOutboxMessages = schedulerHelper.getApprovalOutboxMessagesByOutboxStatusAndSagaStatuses(
+        List<OrderApprovalOutboxMessage> approvalOutboxMessages = approvalOutboxHelper.getApprovalOutboxMessagesByOutboxStatusAndSagaStatuses(
                 OutboxStatus.COMPLETED,
                 sagaStatuses
         );
@@ -51,7 +50,7 @@ public class RestaurantApprovalOutboxCleanerSched implements OutboxScheduler {
                 messagesPayloads
         );
 
-        schedulerHelper.deleteApprovalOutboxMessagesByOutboxStatusAndSagaStatuses(
+        approvalOutboxHelper.deleteApprovalOutboxMessagesByOutboxStatusAndSagaStatuses(
                 OutboxStatus.COMPLETED,
                 sagaStatuses
         );

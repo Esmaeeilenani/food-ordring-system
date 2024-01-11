@@ -11,6 +11,7 @@ import com.food.ordring.system.order.service.domain.event.OrderCreatedEvent;
 import com.food.ordring.system.order.service.domain.event.OrderPaidEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -47,6 +48,11 @@ public class OrderMessagingDataMapper {
     public RestaurantApprovalRequestAvroModel OrderPaidEventToRestaurantApprovalRequestAvroModel(OrderPaidEvent orderPaidEvent) {
         Order order = orderPaidEvent.getOrder();
 
+        List<Product> orderProducts = order.getOrderItems().stream().map(orderItem ->
+                Product.newBuilder()
+                        .setId(orderItem.getProduct().getId().getValue().toString())
+                        .setQuantity(orderItem.getQuantity())
+                        .build()).toList();
         return RestaurantApprovalRequestAvroModel.newBuilder()
                 .setId(UUID.randomUUID().toString())
                 .setSagaId("")
@@ -54,11 +60,7 @@ public class OrderMessagingDataMapper {
                 .setRestaurantId(order.getRestaurantId().getValue().toString())
                 .setOrderId(order.getId().getValue().toString())
                 .setRestaurantOrderStatus(RestaurantOrderStatus.valueOf(order.getOrderStatus().name()))
-                .setProducts(order.getOrderItems().stream().map(orderItem ->
-                        Product.newBuilder()
-                                .setId(orderItem.getProduct().getId().getValue().toString())
-                                .setQuantity(orderItem.getQuantity())
-                                .build()).toList())
+                .setProducts(orderProducts)
                 .setPrice(order.getPrice().getAmount())
                 .setCreatedAt(orderPaidEvent.getCreatedAt().toInstant())
                 .setRestaurantOrderStatus(RestaurantOrderStatus.PAID)

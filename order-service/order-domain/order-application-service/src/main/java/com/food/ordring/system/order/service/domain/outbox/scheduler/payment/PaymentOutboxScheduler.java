@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 @Transactional
 public class PaymentOutboxScheduler implements OutboxScheduler {
 
-    private final SchedulerHelper schedulerHelper;
+    private final PaymentOutboxHelper paymentOutboxHelper;
     private final PaymentRequestPublisher paymentRequestPublisher;
 
     @Override
     @Scheduled(fixedDelayString = "${order-service.outbox-scheduler-fixed-rate}",
             initialDelayString = "${order-service.outbox-scheduler-initial-delay}")
     public void processesOutboxMessage() {
-        List<OrderPaymentOutboxMessage> orderPaymentOutboxMessages = schedulerHelper.getPaymentOutboxMessagesByOutboxStatusAndSagaStatuses(OutboxStatus.STARTED,
+        List<OrderPaymentOutboxMessage> orderPaymentOutboxMessages = paymentOutboxHelper.getPaymentOutboxMessagesByOutboxStatusAndSagaStatuses(OutboxStatus.STARTED,
                 SagaStatus.STARTED, SagaStatus.COMPENSATING);
         if (orderPaymentOutboxMessages.isEmpty()) {
             return;
@@ -51,7 +51,7 @@ public class PaymentOutboxScheduler implements OutboxScheduler {
 
     private void updateOutboxStatus(OrderPaymentOutboxMessage orderPaymentOutboxMessage, OutboxStatus outboxStatus) {
         orderPaymentOutboxMessage.setOutboxStatus(outboxStatus);
-        schedulerHelper.save(orderPaymentOutboxMessage);
+        paymentOutboxHelper.save(orderPaymentOutboxMessage);
         log.info("OrderPaymentOutboxMessage updated with outbox status: {}", outboxStatus);
 
     }

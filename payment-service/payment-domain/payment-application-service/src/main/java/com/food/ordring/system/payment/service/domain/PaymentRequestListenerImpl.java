@@ -20,14 +20,14 @@ public class PaymentRequestListenerImpl implements PaymentRequestListener {
     @Override
     public void completePayment(PaymentRequest paymentRequest) {
         PaymentEvent paymentEvent = paymentRequestHelper.persistCompletePayment(paymentRequest);
-        paymentEvent.fire();
+
     }
 
 
     @Override
     public void cancelPayment(PaymentRequest paymentRequest) {
         PaymentEvent paymentEvent = paymentRequestHelper.persistCancelledPayment(paymentRequest);
-        paymentEvent.fire();
+
     }
 
 

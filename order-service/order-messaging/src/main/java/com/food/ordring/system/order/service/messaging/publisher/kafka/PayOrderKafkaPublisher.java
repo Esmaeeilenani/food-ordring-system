@@ -5,7 +5,6 @@ import com.food.ordring.system.kafka.producer.KafkaMessageCallbackHelper;
 import com.food.ordring.system.kafka.producer.service.KafkaProducer;
 import com.food.ordring.system.order.service.domain.config.OrderServiceConfig;
 import com.food.ordring.system.order.service.domain.event.OrderPaidEvent;
-import com.food.ordring.system.order.service.domain.ports.output.message.publisher.restaurant.OrderPaidPublisher;
 import com.food.ordring.system.order.service.messaging.mapper.OrderMessagingDataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,13 +13,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class PayOrderKafkaPublisher implements OrderPaidPublisher {
+public class PayOrderKafkaPublisher  {
     private final OrderMessagingDataMapper orderMessagingDataMapper;
     private final OrderServiceConfig orderServiceConfig;
     private final KafkaProducer<String, RestaurantApprovalRequestAvroModel> kafkaProducer;
     private final KafkaMessageCallbackHelper kafkaMessageCallbackHelper;
 
-    @Override
+
     public void publish(OrderPaidEvent domainEvent) {
         String orderId = domainEvent.getOrder().getId().getValue().toString();
         RestaurantApprovalRequestAvroModel restaurantApprovalRequestAvroModel = orderMessagingDataMapper.OrderPaidEventToRestaurantApprovalRequestAvroModel(domainEvent);

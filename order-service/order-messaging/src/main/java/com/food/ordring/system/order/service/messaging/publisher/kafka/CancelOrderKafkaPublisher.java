@@ -5,7 +5,6 @@ import com.food.ordring.system.kafka.producer.KafkaMessageCallbackHelper;
 import com.food.ordring.system.kafka.producer.service.KafkaProducer;
 import com.food.ordring.system.order.service.domain.config.OrderServiceConfig;
 import com.food.ordring.system.order.service.domain.event.OrderCancelledEvent;
-import com.food.ordring.system.order.service.domain.ports.output.message.publisher.payment.OrderCancelledPublisher;
 import com.food.ordring.system.order.service.messaging.mapper.OrderMessagingDataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class CancelOrderKafkaPublisher implements OrderCancelledPublisher {
+public class CancelOrderKafkaPublisher  {
 
     private final OrderMessagingDataMapper orderMessagingDataMapper;
     private final OrderServiceConfig orderServiceConfig;
@@ -22,7 +21,7 @@ public class CancelOrderKafkaPublisher implements OrderCancelledPublisher {
 
     private final KafkaMessageCallbackHelper kafkaMessageCallbackHelper;
 
-    @Override
+
 
     public void publish(OrderCancelledEvent domainEvent) {
         String orderId = domainEvent.getOrder().getId().getValue().toString();

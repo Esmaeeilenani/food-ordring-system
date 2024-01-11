@@ -1,10 +1,14 @@
 package com.food.ordring.system.order.service.domain.outbox.scheduler.approval;
 
-import com.food.ordring.system.order.service.domain.exception.OrderDomainException;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.food.ordring.system.domain.exception.DomainException;
+import com.food.ordring.system.domain.valueobject.OrderStatus;
+import com.food.ordring.system.order.service.domain.outbox.model.approval.OrderApprovalEventPayload;
 import com.food.ordring.system.order.service.domain.outbox.model.approval.OrderApprovalOutboxMessage;
-import com.food.ordring.system.order.service.domain.outbox.model.payment.OrderPaymentOutboxMessage;
+import com.food.ordring.system.order.service.domain.outbox.model.payment.OrderPaymentEventPayload;
 import com.food.ordring.system.order.service.domain.ports.output.repository.ApprovalOutboxRepository;
-import com.food.ordring.system.order.service.domain.ports.output.repository.PaymentOutboxRepository;
 import com.food.ordring.system.outbox.OutboxStatus;
 import com.food.ordring.system.saga.SagaStatus;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +26,10 @@ import static com.food.ordring.system.saga.order.SagaConstants.ORDER_SAGA_NAME;
 @RequiredArgsConstructor
 @Component
 @Transactional
-class SchedulerHelper {
+public class ApprovalOutboxHelper {
     private final ApprovalOutboxRepository approvalOutboxRepository;
+
+    private final ObjectMapper objectMapper;
 
 
     @Transactional(readOnly = true)
@@ -52,4 +58,35 @@ class SchedulerHelper {
     }
 
 
+    public void saveApprovalOutboxMessage(OrderApprovalEventPayload eventPayload,
+                                          OrderStatus orderStatus,
+                                          SagaStatus sagaStatus,
+                                          OutboxStatus outboxStatus,
+                                          UUID sagaId) {
+        OrderApprovalOutboxMessage approvalOutboxMessage = OrderApprovalOutboxMessage
+                .builder()
+                .id(UUID.randomUUID())
+                .sagaId(sagaId)
+                .sagaStatus(sagaStatus)
+                .outboxStatus(outboxStatus)
+                .orderStatus(orderStatus)
+                .payload(getPayloadAsJson(eventPayload))
+                .createdAt(eventPayload.getCreatedAt())
+                .type(ORDER_SAGA_NAME)
+                .build();
+
+
+    }
+
+    private String getPayloadAsJson(OrderApprovalEventPayload eventPayload) {
+        try {
+            return objectMapper.writeValueAsString(eventPayload);
+        } catch (JsonProcessingException e) {
+            log.error("could not create json for OrderApprovalEventPayload for id: {}",
+                    eventPayload.getOrderId(),
+                    e);
+            throw new DomainException("could not create json for OrderPaymentEventPayload for id: " + eventPayload.getOrderId());
+        }
+
+    }
 }

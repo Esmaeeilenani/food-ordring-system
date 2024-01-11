@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 @Transactional
 public class PaymentOutboxCleanerScheduler implements OutboxScheduler {
-    private final SchedulerHelper schedulerHelper;
+    private final PaymentOutboxHelper paymentOutboxHelper;
     private final PaymentRequestPublisher paymentRequestPublisher;
 
 
@@ -31,7 +31,7 @@ public class PaymentOutboxCleanerScheduler implements OutboxScheduler {
                 SagaStatus.COMPENSATED,
                 SagaStatus.FAILED};
 
-        List<OrderPaymentOutboxMessage> paymentOutboxMessages = schedulerHelper
+        List<OrderPaymentOutboxMessage> paymentOutboxMessages = paymentOutboxHelper
                 .getPaymentOutboxMessagesByOutboxStatusAndSagaStatuses(OutboxStatus.COMPLETED,
                         sagaStatuses
                 );
@@ -48,7 +48,7 @@ public class PaymentOutboxCleanerScheduler implements OutboxScheduler {
                 messagesPayloads
         );
 
-        schedulerHelper
+        paymentOutboxHelper
                 .deletePaymentOutboxMessagesByOutboxStatusAndSagaStatuses(OutboxStatus.COMPLETED,
                         sagaStatuses);
 

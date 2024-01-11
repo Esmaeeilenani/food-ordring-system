@@ -17,7 +17,7 @@ public class PaymentCancelledEvent extends PaymentEvent {
         this.publisher = publisher;
     }
 
-    @Override
+
     public void fire() {
         publisher.publish(this);
     }

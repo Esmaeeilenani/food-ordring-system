@@ -5,7 +5,6 @@ import com.food.ordring.system.kafka.producer.KafkaMessageCallbackHelper;
 import com.food.ordring.system.kafka.producer.service.KafkaProducer;
 import com.food.ordring.system.order.service.domain.config.OrderServiceConfig;
 import com.food.ordring.system.order.service.domain.event.OrderCreatedEvent;
-import com.food.ordring.system.order.service.domain.ports.output.message.publisher.payment.OrderCreatedPublisher;
 import com.food.ordring.system.order.service.messaging.mapper.OrderMessagingDataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class CreateOrderKafkaPublisher implements OrderCreatedPublisher {
+public class CreateOrderKafkaPublisher  {
     private final OrderMessagingDataMapper orderMessagingDataMapper;
     private final OrderServiceConfig orderServiceConfig;
     private final KafkaProducer<String, PaymentRequestAvroModel> kafkaProducer;
@@ -22,7 +21,7 @@ public class CreateOrderKafkaPublisher implements OrderCreatedPublisher {
     private final KafkaMessageCallbackHelper kafkaMessageCallbackHelper;
 
 
-    @Override
+
     public void publish(OrderCreatedEvent domainEvent) {
         String orderId = domainEvent.getOrder().getId().getValue().toString();
         log.info("Received CreateOrderEvent for order : {}", orderId);

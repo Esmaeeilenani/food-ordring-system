@@ -23,7 +23,6 @@ public class OrderApprovedEvent extends OrderApprovalEvent {
     }
 
 
-    @Override
     public void fire() {
         this.publisher.publish(this);
     }

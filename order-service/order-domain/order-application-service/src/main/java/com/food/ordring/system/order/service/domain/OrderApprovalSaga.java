@@ -1,12 +1,10 @@
 package com.food.ordring.system.order.service.domain;
 
-import com.food.ordring.system.domain.event.EmptyEvent;
 import com.food.ordring.system.domain.valueobject.OrderId;
 import com.food.ordring.system.order.service.domain.dto.message.RestaurantApprovalResponse;
 import com.food.ordring.system.order.service.domain.entity.Order;
 import com.food.ordring.system.order.service.domain.event.OrderCancelledEvent;
 import com.food.ordring.system.order.service.domain.exception.OrderNotFoundException;
-import com.food.ordring.system.order.service.domain.ports.output.message.publisher.payment.OrderCancelledPublisher;
 import com.food.ordring.system.order.service.domain.ports.output.repository.OrderRepository;
 import com.food.ordring.system.saga.SagaStep;
 import lombok.RequiredArgsConstructor;
@@ -20,16 +18,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Component
 @Transactional
-public class OrderApprovalSaga implements SagaStep<RestaurantApprovalResponse,
-        EmptyEvent,
-        OrderCancelledEvent> {
+public class OrderApprovalSaga implements SagaStep<RestaurantApprovalResponse> {
 
     private final OrderDomainService orderDomainService;
     private final OrderRepository orderRepository;
-    private final OrderCancelledPublisher orderCancelledPublisher;
 
     @Override
-    public EmptyEvent process(RestaurantApprovalResponse restaurantApprovalResponse) {
+    public void process(RestaurantApprovalResponse restaurantApprovalResponse) {
         String orderId = restaurantApprovalResponse.getOrderId();
         log.info("Approving order with id: {}", orderId);
 
@@ -42,11 +37,11 @@ public class OrderApprovalSaga implements SagaStep<RestaurantApprovalResponse,
         orderDomainService.approveOrder(order);
         orderRepository.save(order);
         log.info("order with id: {} is approved", orderId);
-        return EmptyEvent.INSTANCE;
+
     }
 
     @Override
-    public OrderCancelledEvent rollback(RestaurantApprovalResponse restaurantApprovalResponse) {
+    public void rollback(RestaurantApprovalResponse restaurantApprovalResponse) {
         String orderId = restaurantApprovalResponse.getOrderId();
         log.info("Cancelling order with id: {}", orderId);
 
@@ -56,9 +51,8 @@ public class OrderApprovalSaga implements SagaStep<RestaurantApprovalResponse,
                     throw new OrderNotFoundException("order with id " + orderId + " is not found");
                 });
 
-        OrderCancelledEvent orderCancelledEvent = orderDomainService.cancelOrderPayment(order, restaurantApprovalResponse.getFailureMessages(), orderCancelledPublisher);
+        OrderCancelledEvent orderCancelledEvent = orderDomainService.cancelOrderPayment(order, restaurantApprovalResponse.getFailureMessages());
         orderRepository.save(order);
 
-        return orderCancelledEvent;
     }
 }

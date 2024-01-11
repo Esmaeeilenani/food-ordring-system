@@ -27,10 +27,9 @@ public class RestaurantResListenerImpl implements RestaurantResListener {
 
     @Override
     public void orderRejected(RestaurantApprovalResponse restaurantApprovalResponse) {
-        OrderCancelledEvent cancelledEvent = orderApprovalSaga.rollback(restaurantApprovalResponse);
-        log.info("Order is Rolling back with failure messages: {} ",
+        orderApprovalSaga.rollback(restaurantApprovalResponse);
+        log.info("Order Approval saga rollback operation with failure messages: {} ",
                 String.join(FAILURE_MESSAGES_DELIMITER,
                         restaurantApprovalResponse.getFailureMessages()));
-        cancelledEvent.fire();
     }
 }
