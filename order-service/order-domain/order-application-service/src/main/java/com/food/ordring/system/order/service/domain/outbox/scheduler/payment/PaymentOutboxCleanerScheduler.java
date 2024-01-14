@@ -1,7 +1,6 @@
 package com.food.ordring.system.order.service.domain.outbox.scheduler.payment;
 
 import com.food.ordring.system.order.service.domain.outbox.model.payment.OrderPaymentOutboxMessage;
-import com.food.ordring.system.order.service.domain.ports.output.message.publisher.payment.PaymentRequestPublisher;
 import com.food.ordring.system.outbox.OutboxScheduler;
 import com.food.ordring.system.outbox.OutboxStatus;
 import com.food.ordring.system.saga.SagaStatus;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 @Transactional
 public class PaymentOutboxCleanerScheduler implements OutboxScheduler {
     private final PaymentOutboxHelper paymentOutboxHelper;
-    private final PaymentRequestPublisher paymentRequestPublisher;
 
 
     @Override
@@ -32,7 +30,7 @@ public class PaymentOutboxCleanerScheduler implements OutboxScheduler {
                 SagaStatus.FAILED};
 
         List<OrderPaymentOutboxMessage> paymentOutboxMessages = paymentOutboxHelper
-                .getPaymentOutboxMessagesByOutboxStatusAndSagaStatuses(OutboxStatus.COMPLETED,
+                .getByOutboxStatusAndSagaStatuses(OutboxStatus.COMPLETED,
                         sagaStatuses
                 );
 
@@ -49,7 +47,7 @@ public class PaymentOutboxCleanerScheduler implements OutboxScheduler {
         );
 
         paymentOutboxHelper
-                .deletePaymentOutboxMessagesByOutboxStatusAndSagaStatuses(OutboxStatus.COMPLETED,
+                .deleteByOutboxStatusAndSagaStatuses(OutboxStatus.COMPLETED,
                         sagaStatuses);
 
         log.info("{} OrderPaymentOutboxMessage deleted!", paymentOutboxMessages.size());

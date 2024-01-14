@@ -1,7 +1,6 @@
 package com.food.ordring.system.order.service.domain.outbox.scheduler.approval;
 
 import com.food.ordring.system.order.service.domain.outbox.model.approval.OrderApprovalOutboxMessage;
-import com.food.ordring.system.order.service.domain.ports.output.message.publisher.restaurant.RestaurantApprovalPub;
 import com.food.ordring.system.outbox.OutboxScheduler;
 import com.food.ordring.system.outbox.OutboxStatus;
 import com.food.ordring.system.saga.SagaStatus;
@@ -22,8 +21,6 @@ public class RestaurantApprovalOutboxCleanerSched implements OutboxScheduler {
 
     private final ApprovalOutboxHelper approvalOutboxHelper;
 
-    private final RestaurantApprovalPub restaurantApprovalPub;
-
 
     @Override
     @Scheduled(cron = "@midnight")
@@ -33,7 +30,7 @@ public class RestaurantApprovalOutboxCleanerSched implements OutboxScheduler {
                 SagaStatus.COMPENSATED,
                 SagaStatus.FAILED
         };
-        List<OrderApprovalOutboxMessage> approvalOutboxMessages = approvalOutboxHelper.getApprovalOutboxMessagesByOutboxStatusAndSagaStatuses(
+        List<OrderApprovalOutboxMessage> approvalOutboxMessages = approvalOutboxHelper.getAllByOutboxStatusAndSagaStatuses(
                 OutboxStatus.COMPLETED,
                 sagaStatuses
         );
@@ -50,7 +47,7 @@ public class RestaurantApprovalOutboxCleanerSched implements OutboxScheduler {
                 messagesPayloads
         );
 
-        approvalOutboxHelper.deleteApprovalOutboxMessagesByOutboxStatusAndSagaStatuses(
+        approvalOutboxHelper.deleteByOutboxStatusAndSagaStatuses(
                 OutboxStatus.COMPLETED,
                 sagaStatuses
         );

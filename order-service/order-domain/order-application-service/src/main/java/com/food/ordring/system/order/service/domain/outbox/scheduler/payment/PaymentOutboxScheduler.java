@@ -27,7 +27,7 @@ public class PaymentOutboxScheduler implements OutboxScheduler {
     @Scheduled(fixedDelayString = "${order-service.outbox-scheduler-fixed-rate}",
             initialDelayString = "${order-service.outbox-scheduler-initial-delay}")
     public void processesOutboxMessage() {
-        List<OrderPaymentOutboxMessage> orderPaymentOutboxMessages = paymentOutboxHelper.getPaymentOutboxMessagesByOutboxStatusAndSagaStatuses(OutboxStatus.STARTED,
+        List<OrderPaymentOutboxMessage> orderPaymentOutboxMessages = paymentOutboxHelper.getByOutboxStatusAndSagaStatuses(OutboxStatus.STARTED,
                 SagaStatus.STARTED, SagaStatus.COMPENSATING);
         if (orderPaymentOutboxMessages.isEmpty()) {
             return;

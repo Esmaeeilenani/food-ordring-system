@@ -45,7 +45,7 @@ public class OrderCreateCommandHandler {
         OrderPaymentEventPayload orderPaymentEventPayload = orderDataMapper.OrderCreatedEventToOrderPaymentPayload(orderCreatedEvent);
 
         paymentOutboxHelper
-                .savePaymentOutboxMessage(orderPaymentEventPayload,
+                .create(orderPaymentEventPayload,
                         order.getOrderStatus(),
                         orderStatusMapper.orderStatusToSagaStatus(order.getOrderStatus()),
                         OutboxStatus.STARTED,

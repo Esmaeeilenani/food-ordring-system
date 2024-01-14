@@ -22,10 +22,8 @@ import com.food.ordring.system.saga.SagaStep;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -50,7 +48,7 @@ public class OrderPaymentSaga implements SagaStep<PaymentResponse> {
     public void process(PaymentResponse paymentResponse) {
 
         Optional<OrderPaymentOutboxMessage> paymentOutboxMessageOpt = paymentOutboxHelper
-                .getPaymentOutboxMessageBySagaIdAndSagaStatuses(
+                .getBySagaIdAndSagaStatuses(
                         UUID.fromString(paymentResponse.getSagaId()),
                         SagaStatus.STARTED);
 
@@ -75,7 +73,7 @@ public class OrderPaymentSaga implements SagaStep<PaymentResponse> {
                 sagaStatus
         ));
 
-        approvalOutboxHelper.saveApprovalOutboxMessage(
+        approvalOutboxHelper.create(
                 orderDataMapper.paidEventToApprovalEventPayload(orderPaidEvent),
                 processedOrderStatus,
                 sagaStatus,
@@ -93,7 +91,7 @@ public class OrderPaymentSaga implements SagaStep<PaymentResponse> {
 
 
         Optional<OrderPaymentOutboxMessage> paymentOutboxMessageOpt = paymentOutboxHelper
-                .getPaymentOutboxMessageBySagaIdAndSagaStatuses(
+                .getBySagaIdAndSagaStatuses(
                         UUID.fromString(paymentResponse.getSagaId()),
                         getCurrentSagaStatusFromPaymentStatus(paymentResponse.getPaymentStatus())
                 );
@@ -178,7 +176,7 @@ public class OrderPaymentSaga implements SagaStep<PaymentResponse> {
                                                                        SagaStatus sagaStatus) {
 
         OrderApprovalOutboxMessage approvalOutboxMessage = approvalOutboxHelper
-                .getApprovalOutboxMessagesBySagaIdAndSagaStatuses(UUID.fromString(sagaId), SagaStatus.COMPENSATING
+                .getBySagaIdAndSagaStatuses(UUID.fromString(sagaId), SagaStatus.COMPENSATING
                 ).orElseThrow(() -> new OrderDomainException("Order Approval outbox message is not found in " +
                         SagaStatus.COMPENSATING.name() + " status"));
 

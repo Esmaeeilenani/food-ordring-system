@@ -9,11 +9,11 @@ import com.food.ordring.system.order.service.domain.entity.Order;
 import com.food.ordring.system.order.service.domain.entity.OrderItem;
 import com.food.ordring.system.order.service.domain.entity.Product;
 import com.food.ordring.system.order.service.domain.entity.Restaurant;
+import com.food.ordring.system.order.service.domain.event.OrderCancelledEvent;
 import com.food.ordring.system.order.service.domain.event.OrderCreatedEvent;
 import com.food.ordring.system.order.service.domain.event.OrderPaidEvent;
 import com.food.ordring.system.order.service.domain.outbox.model.approval.OrderApprovalEventPayload;
 import com.food.ordring.system.order.service.domain.outbox.model.approval.OrderApprovalEventProducts;
-import com.food.ordring.system.order.service.domain.outbox.model.approval.OrderApprovalOutboxMessage;
 import com.food.ordring.system.order.service.domain.outbox.model.payment.OrderPaymentEventPayload;
 import com.food.ordring.system.order.service.domain.valueobject.StreetAddress;
 import org.springframework.stereotype.Component;
@@ -36,10 +36,6 @@ public class OrderDataMapper {
     }
 
     public Order createOrderCommandToOrder(CreateOrderCommand createOrderCommand) {
-        List<Product> products = createOrderCommand.getItems()
-                .stream()
-                .map(orderItem -> new Product(orderItem.getProductId()))
-                .toList();
         return Order.builder()
                 .customerId(new CustomerId(createOrderCommand.getCustomerId()))
                 .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))
@@ -119,4 +115,17 @@ public class OrderDataMapper {
                 .createdAt(orderPaidEvent.getCreatedAt())
                 .build();
     }
+
+    public OrderPaymentEventPayload orderCancelledEventToOrderPaymentEventPayload(OrderCancelledEvent cancelledEvent){
+
+        Order order = cancelledEvent.getOrder();
+        return OrderPaymentEventPayload.builder()
+                .customerId(order.getCustomerId().toString())
+                .orderId(order.getId().toString())
+                .price(order.getPrice().getAmount())
+                .createdAt(cancelledEvent.getCreatedAt())
+                .paymentOrderStatus(PaymentOrderStatus.CANCELLED.name())
+                .build();
+    }
+
 }
