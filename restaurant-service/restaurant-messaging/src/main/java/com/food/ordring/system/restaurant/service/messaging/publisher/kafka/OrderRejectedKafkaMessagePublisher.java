@@ -1,7 +1,7 @@
 package com.food.ordring.system.restaurant.service.messaging.publisher.kafka;
 
 import com.food.ordring.system.kafka.order.avro.model.RestaurantApprovalResponseAvroModel;
-import com.food.ordring.system.kafka.producer.KafkaMessageCallbackHelper;
+import com.food.ordring.system.kafka.producer.KafkaMessageHelper;
 
 import com.food.ordring.system.kafka.producer.service.KafkaProducer;
 import com.food.ordring.system.restaurant.service.domain.config.RestaurantServiceConfigData;
@@ -18,12 +18,12 @@ public class OrderRejectedKafkaMessagePublisher implements OrderRejectedPub {
     private final RestaurantMessagingDataMapper restaurantMessagingDataMapper;
     private final KafkaProducer<String, RestaurantApprovalResponseAvroModel> kafkaProducer;
     private final RestaurantServiceConfigData restaurantServiceConfigData;
-    private final KafkaMessageCallbackHelper kafkaMessageHelper;
+    private final KafkaMessageHelper kafkaMessageHelper;
 
     public OrderRejectedKafkaMessagePublisher(RestaurantMessagingDataMapper restaurantMessagingDataMapper,
                                               KafkaProducer<String, RestaurantApprovalResponseAvroModel> kafkaProducer,
                                               RestaurantServiceConfigData restaurantServiceConfigData,
-                                              KafkaMessageCallbackHelper kafkaMessageHelper) {
+                                              KafkaMessageHelper kafkaMessageHelper) {
         this.restaurantMessagingDataMapper = restaurantMessagingDataMapper;
         this.kafkaProducer = kafkaProducer;
         this.restaurantServiceConfigData = restaurantServiceConfigData;

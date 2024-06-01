@@ -7,6 +7,7 @@ import com.food.ordring.system.order.service.domain.ports.input.message.listener
 import com.food.ordring.system.order.service.messaging.mapper.OrderMessagingDataMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -40,18 +41,23 @@ public class PaymentResponseKafkaListener implements KafkaConsumer<PaymentRespon
                 offsets.toString());
 
         messages.forEach(paymentResponseAvroModel -> {
-            if (paymentResponseAvroModel.getPaymentStatus().equals(PaymentStatus.COMPLETED)) {
-                log.info("processing a successful payment for order id:{}",paymentResponseAvroModel.getOrderId());
-                paymentResponseListener
-                        .paymentCompleted(orderMessagingDataMapper
-                                .paymentResponseAvroToPaymentResponse(paymentResponseAvroModel));
-            }
+            try {
+                if (paymentResponseAvroModel.getPaymentStatus().equals(PaymentStatus.COMPLETED)) {
+                    log.info("processing a successful payment for order id:{}", paymentResponseAvroModel.getOrderId());
+                    paymentResponseListener
+                            .paymentCompleted(orderMessagingDataMapper
+                                    .paymentResponseAvroToPaymentResponse(paymentResponseAvroModel));
+                }
 
-            if (paymentResponseAvroModel.getPaymentStatus().equals(PaymentStatus.CANCELLED) ||
-                    paymentResponseAvroModel.getPaymentStatus().equals(PaymentStatus.FAILED)) {
-                log.info("processing a cancelled payment for order id:{}",paymentResponseAvroModel.getOrderId());
-                paymentResponseListener
-                        .paymentCanceled(orderMessagingDataMapper.paymentResponseAvroToPaymentResponse(paymentResponseAvroModel));
+                if (paymentResponseAvroModel.getPaymentStatus().equals(PaymentStatus.CANCELLED) ||
+                        paymentResponseAvroModel.getPaymentStatus().equals(PaymentStatus.FAILED)) {
+                    log.info("processing a cancelled payment for order id:{}", paymentResponseAvroModel.getOrderId());
+                    paymentResponseListener
+                            .paymentCanceled(orderMessagingDataMapper.paymentResponseAvroToPaymentResponse(paymentResponseAvroModel));
+                }
+            } catch (OptimisticLockingFailureException e) {
+                log.error("Caught Optimistic Locking exception in PaymentResponseKafkaListener for order id: {}",
+                        paymentResponseAvroModel.getOrderId());
             }
 
 

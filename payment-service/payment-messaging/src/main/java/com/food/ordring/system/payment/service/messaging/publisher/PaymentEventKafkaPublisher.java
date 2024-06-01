@@ -1,21 +1,14 @@
 package com.food.ordring.system.payment.service.messaging.publisher;
 
 import com.food.ordring.system.kafka.order.avro.model.PaymentResponseAvroModel;
-import com.food.ordring.system.kafka.producer.KafkaMessageCallbackHelper;
+import com.food.ordring.system.kafka.producer.KafkaMessageHelper;
 import com.food.ordring.system.kafka.producer.service.KafkaProducer;
 import com.food.ordring.system.payment.service.domain.config.PaymentServiceConfigData;
-import com.food.ordring.system.payment.service.domain.event.PaymentCancelledEvent;
-import com.food.ordring.system.payment.service.domain.event.PaymentCompletedEvent;
 import com.food.ordring.system.payment.service.domain.event.PaymentEvent;
-import com.food.ordring.system.payment.service.domain.event.PaymentFailedEvent;
-import com.food.ordring.system.payment.service.domain.exception.PaymentDomainException;
-import com.food.ordring.system.payment.service.messaging.mapper.PaymentMessagingDataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j
@@ -28,7 +21,7 @@ public class PaymentEventKafkaPublisher<T extends PaymentEvent> {
 
     private final PaymentServiceConfigData paymentServiceConfigData;
 
-    private final KafkaMessageCallbackHelper kafkaMessageCallbackHelper;
+    private final KafkaMessageHelper kafkaMessageHelper;
 
 
 
@@ -49,7 +42,7 @@ public class PaymentEventKafkaPublisher<T extends PaymentEvent> {
             kafkaProducer.send(responseTopicName,
                     orderId,
                     paymentResponseAvroModel,
-                    kafkaMessageCallbackHelper.getKafkaCallback(
+                    kafkaMessageHelper.getKafkaCallback(
                             responseTopicName,
                             paymentResponseAvroModel,
                             orderId

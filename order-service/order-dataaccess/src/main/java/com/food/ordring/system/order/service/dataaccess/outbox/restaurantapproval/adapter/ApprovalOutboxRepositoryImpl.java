@@ -30,10 +30,11 @@ public class ApprovalOutboxRepositoryImpl implements ApprovalOutboxRepository {
 
     @Override
     public OrderApprovalOutboxMessage save(OrderApprovalOutboxMessage orderApprovalOutboxMessage) {
+        ApprovalOutboxEntity approvalOutboxEntity = approvalOutboxDataAccessMapper
+                .orderCreatedOutboxMessageToOutboxEntity(orderApprovalOutboxMessage);
+        approvalOutboxEntity = approvalOutboxJpaRepository.save(approvalOutboxEntity);
         return approvalOutboxDataAccessMapper
-                .approvalOutboxEntityToOrderApprovalOutboxMessage(approvalOutboxJpaRepository
-                        .save(approvalOutboxDataAccessMapper
-                                .orderCreatedOutboxMessageToOutboxEntity(orderApprovalOutboxMessage)));
+                .approvalOutboxEntityToOrderApprovalOutboxMessage(approvalOutboxEntity);
     }
 
     @Override
